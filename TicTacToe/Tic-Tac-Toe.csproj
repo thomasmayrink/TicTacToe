@@ -47,6 +47,7 @@
     <Compile Include="GameIO.cs" />
     <Compile Include="GameLogic.cs" />
     <Compile Include="GameManager.cs" />
+    <Compile Include="GameMessage.cs" />
     <Compile Include="HumanPlayer.cs" />
     <Compile Include="IPlayer.cs" />
     <Compile Include="TicTacToeGame.cs" />
