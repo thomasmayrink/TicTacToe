@@ -13,7 +13,10 @@ namespace TicTacToe
     public interface IPlayer
     {
         CrossesOrNoughts Symbol();
+        void SetSymbol(CrossesOrNoughts symbol);
         void MakeMove();
         string Name();
+        int Score();
+        void UpdateScore(int differense);
     }
 }

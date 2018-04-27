@@ -156,12 +156,14 @@ namespace TicTacToe
         private string playerName;
         private CrossesOrNoughts playerSymbol;
         private GameManager gameManager;
+        private int score;
 
         public ComputerPlayer(string name, CrossesOrNoughts symbol, GameManager gameManager)
         {
             this.playerName = name;
             this.playerSymbol = symbol;
             this.gameManager = gameManager;
+            this.score = 0;
         }
 
         /// <summary>
@@ -180,7 +182,25 @@ namespace TicTacToe
             gameManager.IO.ProcessDigitalInput(move.Row, move.Column);
         }
 
-        
+        /// <summary>
+        /// The score of the player
+        /// </summary>
+        /// <returns></returns>
+        public int Score() => score;
+
+        public void SetSymbol(CrossesOrNoughts symbol)
+        {
+            this.playerSymbol = symbol;
+        }
+
+        /// <summary>
+        /// Update the score by the player
+        /// </summary>
+        /// <param name="differense"></param>
+        public void UpdateScore(int differense)
+        {
+            this.score += differense;
+        }
         
     }
 }

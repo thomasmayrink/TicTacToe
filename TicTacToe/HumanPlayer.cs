@@ -17,6 +17,7 @@ namespace TicTacToe
         private string name;
         private CrossesOrNoughts symbol;
         private GameManager gameManager;
+        private int score;
 
         /// <summary>
         /// Creats an instance of player
@@ -29,6 +30,7 @@ namespace TicTacToe
             this.name = name;
             this.symbol = symbol;
             this.gameManager = gameManager;
+            this.score = 0;
         }
 
         /// <summary>
@@ -47,5 +49,26 @@ namespace TicTacToe
         /// </summary>
         /// <returns>Player's name</returns>
         public string Name() => name;
+
+        /// <summary>
+        /// Score of the player
+        /// </summary>
+        /// <returns>The score of the player</returns>
+        public int Score() => score;
+
+        public void SetSymbol(CrossesOrNoughts symbol)
+        {
+            this.symbol = symbol;
+        }
+
+        /// <summary>
+        /// Update the player's score
+        /// </summary>
+        /// <param name="differense">The differense between the new and the old score</param>
+        public void UpdateScore(int differense)
+        {
+            this.score += differense;
+        }
+
     }
 }
