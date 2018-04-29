@@ -1,7 +1,6 @@
 # TicTacToe
 A demo tic-tac-toe game to get acquanted with MonogGame library.
 
-At the moment of writing, implements a single game against the computer where player starts.
+At the moment of writing, plays an endless match between player and the computer, tracking the score.
 
-Planned in future:
-Multiple games and scores.
+No future updates are planned at the moment, however it is possible that "game modes" will be added later.
