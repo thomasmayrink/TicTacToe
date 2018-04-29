@@ -15,14 +15,13 @@ namespace TicTacToe
     public class GameIO
     {
         GameManager gameManager;
-        TicTacToeGame game => gameManager.TheGame;
-        GameLogic gameLogic => gameManager.Logic;
-        GameBoard board => gameManager.Board;
-        Vector2 topLeft;                                     // top left position of the board
-        float SquareHeight => TableHeight / 3;               // height of the the square on the board
-        float SquareWidth => TableWidth / 3;                 // wdith of the suare on the board
-        float TableHeight;                                   // heigiht of the table
-        float TableWidth;                                    // width of the table
+        TicTacToeGame TheGame => gameManager.TheGame;
+        GameLogic Logic => gameManager.Logic;
+        GameBoard Board => gameManager.Board;
+        Vector2 TopLeft => WindowSize * 0.05f;    // top left position of the board
+        Vector2 SquareSize => WindowSize / 5;
+        Vector2 BoardSize => SquareSize * 3f;
+        Vector2 WindowSize => new Vector2(TheGame.GraphicsDevice.Viewport.Width, TheGame.GraphicsDevice.Viewport.Height);
         Texture2D background;                                // background texture
         Texture2D tableBorders;                              // borders between the squares
         Texture2D xImage;                                    // Crosses image
@@ -31,24 +30,25 @@ namespace TicTacToe
         Texture2D verticalLine;                              // vertical line image    
         Texture2D westEastDiagonal;                          // an image of diagonal from topleft to buttom right
         Texture2D eastWestDiagonal;                          // an image of diagonal from topright to butttom left
+        GameMessage gameMessage;
 
-        public GameIO(GameManager gameManager, float topLeftX = 0f, float topLeftY = 0f, float height = 640f, float width = 640f)
+        private GameIO() { }
+
+        public GameIO(GameManager gameManager)
         {
             this.gameManager = gameManager;
-            background = game.Content.Load<Texture2D>("Background");
-            tableBorders = game.Content.Load<Texture2D>("TableBorders");
-            xImage = game.Content.Load<Texture2D>("X");
-            oImage = game.Content.Load<Texture2D>("O");
-            horizontalLine = game.Content.Load<Texture2D>("HorizontalLine");
-            verticalLine = game.Content.Load<Texture2D>("VerticalLine");
-            westEastDiagonal = game.Content.Load<Texture2D>("WestEastDiagonal");
-            eastWestDiagonal = game.Content.Load<Texture2D>("EastWestDiagonal");
-            TableHeight = height;
-            TableWidth = width;
-            topLeft = new Vector2(topLeftX, topLeftY);
+            background = TheGame.Content.Load<Texture2D>("Background");
+            tableBorders = TheGame.Content.Load<Texture2D>("TableBorders");
+            xImage = TheGame.Content.Load<Texture2D>("X");
+            oImage = TheGame.Content.Load<Texture2D>("O");
+            horizontalLine = TheGame.Content.Load<Texture2D>("HorizontalLine");
+            verticalLine = TheGame.Content.Load<Texture2D>("VerticalLine");
+            westEastDiagonal = TheGame.Content.Load<Texture2D>("WestEastDiagonal");
+            eastWestDiagonal = TheGame.Content.Load<Texture2D>("EastWestDiagonal");
+            gameMessage = new GameMessage(gameManager);
         }
 
-        
+
         /// <summary>
         /// Draws a square image on the screen
         /// </summary>
@@ -57,10 +57,10 @@ namespace TicTacToe
         /// <param name="leftPosition">Left border of the image</param>
         /// <param name="height">Height of the image</param>
         /// <param name="width">Widht of the image</param>
-        void DrawSquare(Texture2D image, float topPosition, float leftPosition, float height, float width)
+        void DrawSquare(Texture2D image, float topPosition, float leftPosition, float width, float height)
         {
-            Rectangle destination = new Rectangle((int)topPosition, (int)leftPosition, (int)height, (int)width);
-            game.SpriteBatch.Draw(image, destination, Color.White);
+            Rectangle destination = new Rectangle((int)topPosition, (int)leftPosition, (int)width, (int)height);
+            TheGame.SpriteBatch.Draw(image, destination, Color.White);
         }
 
         /// <summary>
@@ -68,8 +68,8 @@ namespace TicTacToe
         /// </summary>
         void DrawBackground()
         {
-            DrawSquare(background, topLeft.X, topLeft.Y,  TableHeight,  TableWidth);
-            DrawSquare(tableBorders, topLeft.X, topLeft.Y, TableHeight, TableWidth);
+            DrawSquare(background, TopLeft.X, TopLeft.Y, BoardSize.X, BoardSize.Y);
+            DrawSquare(tableBorders, TopLeft.X, TopLeft.Y, BoardSize.X, BoardSize.Y);
         }
 
         /// <summary>
@@ -77,19 +77,19 @@ namespace TicTacToe
         /// </summary>
         void DrawSquares()
         {
-            for(int i = 0; i < 3; ++i)
-                for(int j = 0; j < 3; ++j)
+            for (int i = 0; i < 3; ++i)
+                for (int j = 0; j < 3; ++j)
                 {
                     Texture2D filling;
-                    if (board[i, j] == CrossesOrNoughts.Crosses)
-                        filling = game.Content.Load<Texture2D>("X");
-                    else if (board[i, j] == CrossesOrNoughts.Naughts)
-                        filling = game.Content.Load<Texture2D>("O");
+                    if (Board[i, j] == CrossesOrNoughts.Crosses)
+                        filling = TheGame.Content.Load<Texture2D>("X");
+                    else if (Board[i, j] == CrossesOrNoughts.Naughts)
+                        filling = TheGame.Content.Load<Texture2D>("O");
                     else filling = null;
 
                     if (filling != null)
-                        DrawSquare(filling, topLeft.X + i * SquareWidth, topLeft.Y + j * SquareHeight,
-                            SquareWidth, SquareHeight);
+                        DrawSquare(filling, TopLeft.X + i * SquareSize.X, TopLeft.Y + j * SquareSize.Y,
+                            SquareSize.X, SquareSize.Y);
                 }
         }
 
@@ -98,11 +98,11 @@ namespace TicTacToe
         /// </summary>
         void MarkRows()
         {
-            for(int i = 0; i < 3; ++i)
+            for (int i = 0; i < 3; ++i)
             {
-                if(board.IsRowTaken(i))
+                if (Board.IsRowTaken(i))
                 {
-                    DrawSquare(horizontalLine, topLeft.X, topLeft.Y + SquareHeight * i, TableWidth, SquareHeight);
+                    DrawSquare(horizontalLine, TopLeft.X, TopLeft.Y + SquareSize.Y * i, BoardSize.X, SquareSize.Y);
                 }
             }
         }
@@ -112,11 +112,11 @@ namespace TicTacToe
         /// </summary>
         void MarkColumns()
         {
-            for(int i = 0; i < 3; ++i)
+            for (int i = 0; i < 3; ++i)
             {
-                if(board.IsColumnTaken(i))
+                if (Board.IsColumnTaken(i))
                 {
-                    DrawSquare(verticalLine, topLeft.X + SquareWidth * i, topLeft.Y, SquareWidth, TableHeight);
+                    DrawSquare(verticalLine, TopLeft.X + SquareSize.X * i, TopLeft.Y, SquareSize.X, BoardSize.Y);
                 }
             }
         }
@@ -126,10 +126,10 @@ namespace TicTacToe
         /// </summary>
         void MarkDiagonals()
         {
-            if (board.IsMainDiagonalTaken())
-                DrawSquare(westEastDiagonal, topLeft.X, topLeft.Y, TableWidth, TableHeight);
-            if (board.IsSecondaryDiagonalTaken())
-                DrawSquare(eastWestDiagonal, topLeft.X, topLeft.Y, TableWidth, TableHeight);
+            if (Board.IsMainDiagonalTaken())
+                DrawSquare(westEastDiagonal, TopLeft.X, TopLeft.Y, BoardSize.X, BoardSize.Y);
+            if (Board.IsSecondaryDiagonalTaken())
+                DrawSquare(eastWestDiagonal, TopLeft.X, TopLeft.Y, BoardSize.X, BoardSize.Y);
         }
 
 
@@ -143,6 +143,13 @@ namespace TicTacToe
             MarkRows();
             MarkColumns();
             MarkDiagonals();
+            PrintScores();
+
+            if (Logic.State == GameLogic.GameState.Over)
+            {
+                DeclareWinner();
+                RestartMessage();
+            }
         }
 
         /// <summary>
@@ -150,10 +157,10 @@ namespace TicTacToe
         /// </summary>
         /// <param name="clickPosition"></param>
         /// <returns></returns>
-        public (int row, int column) BoardPosition(Vector2 clickPosition)
+        public (int row, int column) PositionOnBoard(Vector2 clickPosition)
         {
-            return ((int)((clickPosition.X - topLeft.X) / SquareWidth),
-                    (int)((clickPosition.Y - topLeft.Y) / SquareHeight));
+            return ((int)((clickPosition.X - TopLeft.X) / SquareSize.X),
+                    (int)((clickPosition.Y - TopLeft.Y) / SquareSize.Y));
         }
 
         /// <summary>
@@ -162,11 +169,11 @@ namespace TicTacToe
         public void ProcessMouseInput()
         {
             MouseState mouseState = Mouse.GetState();
-            
-            if(mouseState.LeftButton == ButtonState.Pressed)
+
+            if (mouseState.LeftButton == ButtonState.Pressed)
             {
-                (int row, int column) = BoardPosition(new Vector2(mouseState.X, mouseState.Y));
-                gameLogic.Update(row, column);
+                (int row, int column) = PositionOnBoard(new Vector2(mouseState.X, mouseState.Y));
+                Logic.Update(row, column);
             }
         }
 
@@ -177,7 +184,7 @@ namespace TicTacToe
         /// <param name="column">Column number</param>
         public void ProcessDigitalInput(int row, int column)
         {
-            gameLogic.Update(row, column);
+            Logic.Update(row, column);
         }
 
         /// <summary>
@@ -185,7 +192,35 @@ namespace TicTacToe
         /// </summary>
         public void Update()
         {
-            gameLogic.CurrentPlayer.MakeMove();
+            if (Logic.State == GameLogic.GameState.Continue) Logic.CurrentPlayer.MakeMove();
+            if (Logic.State == GameLogic.GameState.Over)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                    gameManager.Reset();
+            }
+        }
+
+        /// <summary>
+        /// Print player scores
+        /// </summary>
+        private void PrintScores()
+        {
+            gameMessage.PrintMessageAt(new Vector2(TopLeft.X, TopLeft.Y + BoardSize.Y + 20),
+                                       $"{Logic.player1.Name()}: {Logic.player1.Score()}");
+            gameMessage.PrintMessageAt(new Vector2(TopLeft.X, TopLeft.Y + BoardSize.Y + 70),
+                                       $"{Logic.player2.Name()}: {Logic.player2.Score()}");
+        }
+
+        private void DeclareWinner()
+        {
+            gameMessage.PrintMessageAt(new Vector2(TopLeft.X, TopLeft.Y + BoardSize.Y + 120),
+                                      $"The winner is {Logic.Winner}");
+        }
+
+        private void RestartMessage()
+        {
+            gameMessage.PrintMessageAt(new Vector2(TopLeft.X, TopLeft.Y + BoardSize.Y + 170),
+                                       "Press space to continue");
         }
 
     }

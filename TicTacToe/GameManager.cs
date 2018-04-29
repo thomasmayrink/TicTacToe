@@ -15,6 +15,8 @@ namespace TicTacToe
         public GameLogic Logic { get; private set; }
         public GameIO IO { get; private set; }
         public GameBoard Board { get; private set; }
+        private IPlayer player1;
+        private IPlayer player2;
 
         /// <summary>
         /// Allocates memory for object - used to avoid null reference errors
@@ -28,6 +30,8 @@ namespace TicTacToe
             Board = null;
         }
 
+        
+
         /// <summary>
         /// The game to which the given Manager belongs to.
         /// </summary>
@@ -38,8 +42,25 @@ namespace TicTacToe
             Board = new GameBoard();
             Logic = new GameLogic(this);
             IO = new GameIO(this);
-            Logic.AddPlayers(new HumanPlayer("Player1", CrossesOrNoughts.Crosses, this),
-                             new ComputerPlayer("Player2", CrossesOrNoughts.Naughts, this));
+            player1 = new HumanPlayer("Player", CrossesOrNoughts.Crosses, this, new ScoreCalculator(10, 1, -10));
+            player2 = new ComputerPlayer("Computer", CrossesOrNoughts.Naughts, this, new ScoreCalculator(10, 0, -10));
+            Logic.AddPlayers(player1, player2);
+        }
+
+        public void Reset()
+        {
+            Board = new GameBoard();
+            Logic = new GameLogic(this);
+
+            CrossesOrNoughts tempSymbol = player1.Symbol();
+            player1.SetSymbol(player2.Symbol());
+            player2.SetSymbol(tempSymbol);
+
+            IPlayer tempPlayer = player1;
+            player1 = player2;
+            player2 = tempPlayer;
+
+            Logic.AddPlayers(player1, player2);
         }
 
         /// <summary>
@@ -47,7 +68,7 @@ namespace TicTacToe
         /// </summary>
         public void Update()
         {
-            if(Logic.State == GameLogic.GameState.Continue) IO.Update();
+            IO.Update();
         }
 
         /// <summary>

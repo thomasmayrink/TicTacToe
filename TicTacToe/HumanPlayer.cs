@@ -12,12 +12,13 @@ namespace TicTacToe
     /// <summary>
     /// A class to represent human controlled player in the game
     /// </summary>
-    class HumanPlayer : IPlayer
+    public class HumanPlayer : IPlayer
     {
         private string name;
         private CrossesOrNoughts symbol;
         private GameManager gameManager;
         private int score;
+        private ScoreCalculator scoreCalculator;
 
         /// <summary>
         /// Creats an instance of player
@@ -25,12 +26,13 @@ namespace TicTacToe
         /// <param name="name">Player's name</param>
         /// <param name="symbol">What player puts on the board - crosses or nauughts</param>
         /// <param name="gameManager">Interface to the game</param>
-        public HumanPlayer(String name, CrossesOrNoughts symbol, GameManager gameManager) 
+        public HumanPlayer(String name, CrossesOrNoughts symbol, GameManager gameManager, ScoreCalculator scoreCalculator) 
         {
             this.name = name;
             this.symbol = symbol;
             this.gameManager = gameManager;
             this.score = 0;
+            this.scoreCalculator = scoreCalculator;
         }
 
         /// <summary>
@@ -64,10 +66,12 @@ namespace TicTacToe
         /// <summary>
         /// Update the player's score
         /// </summary>
-        /// <param name="differense">The differense between the new and the old score</param>
-        public void UpdateScore(int differense)
+        /// <param name="winner">Current winner of the game</param>
+        public void UpdateScore(CrossesOrNoughts winner)
         {
-            this.score += differense;
+            if (winner == symbol) score += scoreCalculator.WinScore;
+            if (winner == GameLogic.OpponentSymbol(symbol)) score += scoreCalculator.LoseScore;
+            else score += scoreCalculator.DrawScore;
         }
 
     }

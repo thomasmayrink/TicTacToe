@@ -62,7 +62,7 @@ namespace TicTacToe
             }
 
             CrossesOrNoughts bestOponentResult = playerSymbol;
-            CrossesOrNoughts opponentSymbol = OpponentSymbol(playerSymbol);
+            CrossesOrNoughts opponentSymbol = GameLogic.OpponentSymbol(playerSymbol);
 
             for (int i = 0; i < 3; ++i)
             {
@@ -117,7 +117,7 @@ namespace TicTacToe
                     bestMove = moves[i];
                 }
 
-                else if (moves[i].Winner == CrossesOrNoughts.Neither && bestMove.Winner == OpponentSymbol(playerSymbol))
+                else if (moves[i].Winner == CrossesOrNoughts.Neither && bestMove.Winner == GameLogic.OpponentSymbol(playerSymbol))
                 {
                     bestMove = moves[i];
                 }
@@ -133,18 +133,6 @@ namespace TicTacToe
 
             return bestMoves[random.Next(bestMoves.Count)];
         }
-
-        /// <summary>
-        /// Calculates the symbol used by opponent player
-        /// </summary>
-        /// <param name="playerSymbol">Returns the symbol used by the opponent</param>
-        /// <returns></returns>
-        private static CrossesOrNoughts OpponentSymbol(CrossesOrNoughts playerSymbol)
-        {
-            if (playerSymbol == CrossesOrNoughts.Crosses) return CrossesOrNoughts.Naughts;
-            if (playerSymbol == CrossesOrNoughts.Naughts) return CrossesOrNoughts.Crosses;
-            else return CrossesOrNoughts.Neither;
-        }
     }
 
 
@@ -153,32 +141,34 @@ namespace TicTacToe
     /// </summary>
     public class ComputerPlayer : IPlayer
     {
-        private string playerName;
-        private CrossesOrNoughts playerSymbol;
+        private string name;
+        private CrossesOrNoughts symbol;
         private GameManager gameManager;
         private int score;
+        private ScoreCalculator scoreCalculator;
 
-        public ComputerPlayer(string name, CrossesOrNoughts symbol, GameManager gameManager)
+        public ComputerPlayer(string name, CrossesOrNoughts symbol, GameManager gameManager, ScoreCalculator scoreCalculator)
         {
-            this.playerName = name;
-            this.playerSymbol = symbol;
+            this.name = name;
+            this.symbol = symbol;
             this.gameManager = gameManager;
             this.score = 0;
+            this.scoreCalculator = scoreCalculator;
         }
 
         /// <summary>
         /// Symbol used by the player  - crosses or noughts
         /// </summary>
         /// <returns>The symbol used by the player</returns>
-        public CrossesOrNoughts Symbol() => playerSymbol;
-        public string Name() => playerName;
+        public CrossesOrNoughts Symbol() => symbol;
+        public string Name() => name;
 
         /// <summary>
         /// Calculates the best possible move and passes it to the IO
         /// </summary>
         public void MakeMove()
         {
-            MoveAnalysis move = MoveCalculator.BestMove(playerSymbol, gameManager.Board);
+            MoveAnalysis move = MoveCalculator.BestMove(symbol, gameManager.Board);
             gameManager.IO.ProcessDigitalInput(move.Row, move.Column);
         }
 
@@ -190,17 +180,19 @@ namespace TicTacToe
 
         public void SetSymbol(CrossesOrNoughts symbol)
         {
-            this.playerSymbol = symbol;
+            this.symbol = symbol;
         }
 
         /// <summary>
-        /// Update the score by the player
+        /// Update the player's score
         /// </summary>
-        /// <param name="differense"></param>
-        public void UpdateScore(int differense)
+        /// <param name="winner">Current winner of the game</param>
+        public void UpdateScore(CrossesOrNoughts winner)
         {
-            this.score += differense;
+            if (winner == symbol) score += scoreCalculator.WinScore;
+            if (winner == GameLogic.OpponentSymbol(symbol)) score += scoreCalculator.LoseScore;
+            else score += scoreCalculator.DrawScore;
         }
-        
+
     }
 }

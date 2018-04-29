@@ -50,6 +50,7 @@
     <Compile Include="GameMessage.cs" />
     <Compile Include="HumanPlayer.cs" />
     <Compile Include="IPlayer.cs" />
+    <Compile Include="ScoreCalculator.cs" />
     <Compile Include="TicTacToeGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

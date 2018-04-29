@@ -17,6 +17,8 @@ namespace TicTacToe
         void MakeMove();
         string Name();
         int Score();
-        void UpdateScore(int differense);
+        void UpdateScore(CrossesOrNoughts crossesOrNoughts);
     }
+
+    
 }

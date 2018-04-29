@@ -12,8 +12,8 @@ namespace TicTacToe
         GraphicsDeviceManager graphics;
         public SpriteBatch SpriteBatch;
         GameManager gameManager;
-        int windowWidth = 640;
-        int windowHeight = 640;
+        int windowWidth = 1280;
+        int windowHeight = 780;
 
         public TicTacToeGame()
         {
@@ -66,6 +66,15 @@ namespace TicTacToe
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            if (Keyboard.GetState().IsKeyDown(Keys.F10))
+            {
+                if (!graphics.IsFullScreen)
+                    graphics.IsFullScreen = true;
+                else
+                    graphics.IsFullScreen = false;
+                graphics.ApplyChanges();
+            }
 
             gameManager.Update();
             

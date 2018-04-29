@@ -17,8 +17,8 @@ namespace TicTacToe
         public enum GameState { Continue, Over};
         private GameManager gameManager;
         GameBoard board => gameManager.Board;
-        IPlayer player1;
-        IPlayer player2;
+        public IPlayer player1 { get; private set; }
+        public IPlayer player2 { get; private set; }
         public IPlayer CurrentPlayer { get;  private set; }
         public CrossesOrNoughts Winner { get; private set; }
         public GameState State { get; private set; }
@@ -104,7 +104,24 @@ namespace TicTacToe
                 (State, Winner) = DetermineResult();
 
                 if (State == GameState.Continue) UpdatePlayer();
+                else
+                {
+                    player1.UpdateScore(Winner);
+                    player2.UpdateScore(Winner);
+                }
             }
+        }
+
+        /// <summary>
+        /// Calculates the symbol used by opponent player
+        /// </summary>
+        /// <param name="playerSymbol">Returns the symbol used by the opponent</param>
+        /// <returns></returns>
+        public static CrossesOrNoughts OpponentSymbol(CrossesOrNoughts playerSymbol)
+        {
+            if (playerSymbol == CrossesOrNoughts.Crosses) return CrossesOrNoughts.Naughts;
+            if (playerSymbol == CrossesOrNoughts.Naughts) return CrossesOrNoughts.Crosses;
+            else return CrossesOrNoughts.Neither;
         }
     }
 }
