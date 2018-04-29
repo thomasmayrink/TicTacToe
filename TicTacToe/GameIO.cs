@@ -213,8 +213,10 @@ namespace TicTacToe
 
         private void DeclareWinner()
         {
+            string winnerName = (Logic.Winner == CrossesOrNoughts.Neither) ? "Draw" : Logic.CurrentPlayer.Name();
             gameMessage.PrintMessageAt(new Vector2(TopLeft.X, TopLeft.Y + BoardSize.Y + 120),
-                                      $"The winner is {Logic.Winner}");
+                                       $"The winner is {winnerName}");
+                                      
         }
 
         private void RestartMessage()
