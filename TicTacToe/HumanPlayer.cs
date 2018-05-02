@@ -14,10 +14,26 @@ namespace TicTacToe
     /// </summary>
     public class HumanPlayer : IPlayer
     {
-        private string name;
+        public string Name { get; private set; }
         private CrossesOrNoughts symbol;
+        public CrossesOrNoughts Symbol
+        {
+            get
+            {
+                return symbol;
+            }
+            set
+            {
+                if (value == CrossesOrNoughts.Neither)
+                    throw new ArgumentOutOfRangeException("Player must be either Nauths or crossees");
+                symbol = value;
+
+            }
+        }
+
         private GameManager gameManager;
-        private int score;
+        
+        public int Score { get; private set; }
         private ScoreCalculator scoreCalculator;
 
         /// <summary>
@@ -28,10 +44,10 @@ namespace TicTacToe
         /// <param name="gameManager">Interface to the game</param>
         public HumanPlayer(String name, CrossesOrNoughts symbol, GameManager gameManager, ScoreCalculator scoreCalculator) 
         {
-            this.name = name;
+            this.Name = name;
             this.symbol = symbol;
             this.gameManager = gameManager;
-            this.score = 0;
+            this.Score = 0;
             this.scoreCalculator = scoreCalculator;
         }
 
@@ -40,23 +56,9 @@ namespace TicTacToe
         /// </summary>
         public void MakeMove() => gameManager.IO.ProcessMouseInput();
 
-        /// <summary>
-        /// The symbol used by player
-        /// </summary>
-        /// <returns>Returns whether the player puts crosses or naughts</returns>
-        public CrossesOrNoughts Symbol() => symbol;
 
-        /// <summary>
-        ///  Player's name
-        /// </summary>
-        /// <returns>Player's name</returns>
-        public string Name() => name;
 
-        /// <summary>
-        /// Score of the player
-        /// </summary>
-        /// <returns>The score of the player</returns>
-        public int Score() => score;
+        
 
         public void SetSymbol(CrossesOrNoughts symbol)
         {
@@ -69,9 +71,9 @@ namespace TicTacToe
         /// <param name="winner">Current winner of the game</param>
         public void UpdateScore(CrossesOrNoughts winner)
         {
-            if (winner == symbol) score += scoreCalculator.WinScore;
-            if (winner == GameLogic.OpponentSymbol(symbol)) score += scoreCalculator.LoseScore;
-            else score += scoreCalculator.DrawScore;
+            if (winner == symbol) Score += scoreCalculator.WinScore;
+            if (winner == GameLogic.OpponentSymbol(symbol)) Score += scoreCalculator.LoseScore;
+            else Score += scoreCalculator.DrawScore;
         }
 
     }

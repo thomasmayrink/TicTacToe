@@ -52,9 +52,9 @@ namespace TicTacToe
             Board = new GameBoard();
             Logic = new GameLogic(this);
 
-            CrossesOrNoughts tempSymbol = player1.Symbol();
-            player1.SetSymbol(player2.Symbol());
-            player2.SetSymbol(tempSymbol);
+            CrossesOrNoughts tempSymbol = player1.Symbol;
+            player1.Symbol = player2.Symbol;
+            player2.Symbol = tempSymbol;
 
             IPlayer tempPlayer = player1;
             player1 = player2;

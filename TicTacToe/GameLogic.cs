@@ -100,7 +100,7 @@ namespace TicTacToe
         {
             if (board.ShouldUpdate(row, column) && State == GameState.Continue)
             {
-                board[row, column] = CurrentPlayer.Symbol();
+                board[row, column] = CurrentPlayer.Symbol;
                 (State, Winner) = DetermineResult();
 
                 if (State == GameState.Continue) UpdatePlayer();

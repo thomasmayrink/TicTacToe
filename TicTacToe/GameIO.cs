@@ -206,14 +206,14 @@ namespace TicTacToe
         private void PrintScores()
         {
             gameMessage.PrintMessageAt(new Vector2(TopLeft.X, TopLeft.Y + BoardSize.Y + 20),
-                                       $"{Logic.player1.Name()}: {Logic.player1.Score()}");
+                                       $"{Logic.player1.Name}: {Logic.player1.Score}");
             gameMessage.PrintMessageAt(new Vector2(TopLeft.X, TopLeft.Y + BoardSize.Y + 70),
-                                       $"{Logic.player2.Name()}: {Logic.player2.Score()}");
+                                       $"{Logic.player2.Name}: {Logic.player2.Score}");
         }
 
         private void DeclareWinner()
         {
-            string winnerName = (Logic.Winner == CrossesOrNoughts.Neither) ? "Draw" : Logic.CurrentPlayer.Name();
+            string winnerName = (Logic.Winner == CrossesOrNoughts.Neither) ? "Draw" : Logic.CurrentPlayer.Name;
             gameMessage.PrintMessageAt(new Vector2(TopLeft.X, TopLeft.Y + BoardSize.Y + 120),
                                        $"The winner is {winnerName}");
                                       

@@ -141,18 +141,18 @@ namespace TicTacToe
     /// </summary>
     public class ComputerPlayer : IPlayer
     {
-        private string name;
+        public string Name { get; private set; }
         private CrossesOrNoughts symbol;
         private GameManager gameManager;
-        private int score;
+        public int Score { get; private set;  }
         private ScoreCalculator scoreCalculator;
 
         public ComputerPlayer(string name, CrossesOrNoughts symbol, GameManager gameManager, ScoreCalculator scoreCalculator)
         {
-            this.name = name;
+            this.Name = name;
             this.symbol = symbol;
             this.gameManager = gameManager;
-            this.score = 0;
+            this.Score = 0;
             this.scoreCalculator = scoreCalculator;
         }
 
@@ -160,8 +160,18 @@ namespace TicTacToe
         /// Symbol used by the player  - crosses or noughts
         /// </summary>
         /// <returns>The symbol used by the player</returns>
-        public CrossesOrNoughts Symbol() => symbol;
-        public string Name() => name;
+        public CrossesOrNoughts Symbol
+        {
+            get => symbol;
+            set
+            {
+                if (value == CrossesOrNoughts.Neither)
+                {
+                    throw new Exception("Player must be assigned either crosses or noughts");
+                }
+                symbol = value;
+            }
+        }
 
         /// <summary>
         /// Calculates the best possible move and passes it to the IO
@@ -172,11 +182,6 @@ namespace TicTacToe
             gameManager.IO.ProcessDigitalInput(move.Row, move.Column);
         }
 
-        /// <summary>
-        /// The score of the player
-        /// </summary>
-        /// <returns></returns>
-        public int Score() => score;
 
         public void SetSymbol(CrossesOrNoughts symbol)
         {
@@ -189,9 +194,9 @@ namespace TicTacToe
         /// <param name="winner">Current winner of the game</param>
         public void UpdateScore(CrossesOrNoughts winner)
         {
-            if (winner == symbol) score += scoreCalculator.WinScore;
-            if (winner == GameLogic.OpponentSymbol(symbol)) score += scoreCalculator.LoseScore;
-            else score += scoreCalculator.DrawScore;
+            if (winner == symbol) Score += scoreCalculator.WinScore;
+            if (winner == GameLogic.OpponentSymbol(symbol)) Score += scoreCalculator.LoseScore;
+            else Score += scoreCalculator.DrawScore;
         }
 
     }
